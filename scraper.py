@@ -50,7 +50,11 @@ time.sleep(3)
 # Opening Demo Profile
 profile_url = "https://www.linkedin.com/in/bassmit1/"
 #profile_url = "https://www.linkedin.com/in/reynier-de-graaff-664139146/"
+my_network = "https://www.linkedin.com/mynetwork/"
  
+driver.get(my_network)
+time.sleep(4)
+
 driver.get(profile_url)        # this will open the link
 time.sleep(5)
 
@@ -102,8 +106,15 @@ print("Name: ", name,
       "\nDescription: ", description,
       "\nLocation: ", location)
 
+# Getting the HTML of the Experience section in the profile
+html_list = driver.find_element_by_id("experience-section")
+#experience = soup.find(id="experience")
+print(html_list)
+
+
+driver.find_elements()
 # Getting the HTML of the Education section in the profile
-#education = soup.find("section", {"id": "ember357"}).find('ul')
+#education = soup.find("section", {"id": "education"}).find('ul')
  
 #print(education)
 
