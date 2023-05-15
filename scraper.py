@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
+import re
 
 DRIVER_PATH = "/usr/local/bin/chromedriver"
 
@@ -52,11 +53,11 @@ profile_url = "https://www.linkedin.com/in/bassmit1/"
 #profile_url = "https://www.linkedin.com/in/reynier-de-graaff-664139146/"
 my_network = "https://www.linkedin.com/mynetwork/"
  
-driver.get(my_network)
-time.sleep(4)
+#driver.get(my_network)
+#time.sleep(4)
 
 driver.get(profile_url)        # this will open the link
-time.sleep(5)
+time.sleep(1)
 
 # Scroll to bottom of profile page
 start = time.time() 
@@ -88,12 +89,15 @@ soup = BeautifulSoup(src, "html.parser")
 # Extracting the HTML of the complete introduction box
 intro = soup.find('div', {'class': 'pv-text-details__left-panel'})
  
+html_pattern = "<(?:\"[^\"]*\"['\"]*|'[^']*'['\"]*|[^'\">])+>"
+#print(re.sub(html_pattern, '', str(intro)))
+
 # Extracting the Name
 name_loc = intro.find("h1")
 name = name_loc.get_text().strip()
 
 # Extracting the description underneath Name
-description_loc = intro.find("div", {'class': 'text-body-medium'})
+description_loc = intro.find('div', {'class': 'text-body-medium'})
 description = description_loc.get_text().strip()
  
 # Ectracting the Location
@@ -107,12 +111,12 @@ print("Name: ", name,
       "\nLocation: ", location)
 
 # Getting the HTML of the Experience section in the profile
-html_list = driver.find_element_by_id("experience-section")
+#html_list = driver.find_element_by_id("experience-section")
 #experience = soup.find(id="experience")
-print(html_list)
+#print(html_list)
 
 
-driver.find_elements()
+#driver.find_elements()
 # Getting the HTML of the Education section in the profile
 #education = soup.find("section", {"id": "education"}).find('ul')
  
