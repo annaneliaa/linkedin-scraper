@@ -120,9 +120,4 @@ print("Name: ", name,
 # Getting the HTML of the Education section in the profile
 #education = soup.find("section", {"id": "education"}).find('ul')
  
-#print(education)
-
-def openGoogle(driver):
-    driver.get("https://www.google.com")
-    time.sleep(100)
-    driver.quit()
+#print(education
