@@ -39,7 +39,7 @@ pword = driver.find_element(By.ID, "password")
  
 # Enter Your Password
 pword.send_keys(str(pwrd))       
- 
+
 # Clicking on the log in button
 # Format (syntax) of writing XPath -->
 # //tagname[@attribute='value']
@@ -50,7 +50,6 @@ time.sleep(3)
 
 # Opening Demo Profile
 profile_url = "https://www.linkedin.com/in/bassmit1/"
-#profile_url = "https://www.linkedin.com/in/reynier-de-graaff-664139146/"
 my_network = "https://www.linkedin.com/mynetwork/"
  
 #driver.get(my_network)
@@ -100,10 +99,9 @@ name = name_loc.get_text().strip()
 description_loc = intro.find('div', {'class': 'text-body-medium'})
 description = description_loc.get_text().strip()
  
-# Ectracting the Location
+# Extracting the Location
 location_loc = soup.find('div', { 'class': 'pv-text-details__left-panel mt2'})
 location = location_loc.get_text().strip()
-#print(location)
  
  
 print("Name: ", name,
@@ -119,5 +117,3 @@ print("Name: ", name,
 #driver.find_elements()
 # Getting the HTML of the Education section in the profile
 #education = soup.find("section", {"id": "education"}).find('ul')
- 
-#print(education
