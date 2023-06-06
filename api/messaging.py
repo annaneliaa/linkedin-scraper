@@ -1,5 +1,6 @@
 from linkedin_api import Linkedin as api
 import util
+from datetime import datetime
 
 class Message():
     """
@@ -36,7 +37,8 @@ def get_conversations_details_by_profile(api, profile_id):
     result = api.get_conversation_details(profile_urn)
 
     body = result["events"][0]["eventContent"]["com.linkedin.voyager.messaging.event.MessageEvent"]["attributedBody"]["text"]
-    date = util.convert_unix_time(result["events"][0]["createdAt"])
+    date = result["events"][0]["createdAt"]
+    date = datetime.utcfromtimestamp(int(date)/1000)
     sender = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["entityUrn"]
     first_name = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["firstName"] 
     last_name = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["lastName"]
@@ -103,3 +105,31 @@ def get_unread_conversations(api):
             profile_urn = conv["participants"][0]["entityUrn"]
             unread_conversations.append(conv_urn, profile_urn)
     return unread_conversations
+
+def get_days_since_last_message(api, self_id, profile_id):
+    """
+    This function returns the number of days since the last message sent by the user to a given profile.
+    
+    :param api: The "api" parameter is an instance of the LinkedIn API client that has been
+    authenticated with valid credentials. It is used to make requests to the LinkedIn API to retrieve
+    :param self_id: The ID of the user who is logged into Linkedin
+    :param profile_id: The profile ID of the user whose conversation details we want to retrieve
+    :return: This function returns the date of the last message sent by the user with profile ID
+    `self_id` to the user with profile ID `profile_id`. If the last message was not sent by the user
+    with profile ID `self_id`, then it returns 0.
+    """
+
+    self_urn = util.get_urn_from_profile_id(api, self_id)
+
+    details = get_conversations_details_by_profile(api, profile_id)
+    last_message = details["latest_message"]
+    sender = util.crop_urn(last_message["sender_urn"])
+
+    # if user is the sender, calculate the days since last message sent
+    # else return 0: no action required
+    if(sender == self_urn):
+        now = datetime.now()
+        date = last_message["date"]
+        days = (now - date).days
+        return days
+    else: return 0

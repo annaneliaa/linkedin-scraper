@@ -3,13 +3,15 @@ import util
 import extract
 import messaging as msg
 
+path = "/Users/annavisman/stack/RUG/CS/Year2/SE/scraping-demo/linkedin-scraper/pwrd.txt"
+
 """
 This main class serves as a teting script for the LinkedIn API, where the functionality
 created in extract.py and messaging.py is tested. These files hold all functions used to
 extract data from LinkedIn profiles and send messages to LinkedIn profiles, respectively.
 """
 # get credentials from file
-credentials = util.get_creds_from_file()
+credentials = util.get_creds_from_file(path)
 
 # the profile id of the demo profile used in development
 demo_hardcoded_profile_id = "anna-twopointo-329146275"
@@ -42,10 +44,12 @@ profiles = ["annavisman", "ieva-randytė-788956199", "arasaniulis", "kamilė-ka�
 # scrape profile
 res = api.get_profile(profiles[0])
 data = extract.extract_profile_data(res)
-extract.print_profile_data(data)
+data.print_lead()
 
 # send message to profile
 msg.send_message_to_profile(api, "Hi, this is a testing message", profiles[0])
 
 # get user's unread conversations
 msg.get_unread_conversations(api)
+
+print(msg.get_days_since_last_message(api, demo_hardcoded_profile_id, profiles[0]))
