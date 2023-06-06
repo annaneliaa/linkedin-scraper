@@ -8,6 +8,12 @@ from bs4 import BeautifulSoup
 import time
 import re
 
+""""
+This file contains a testing script used for HTML DOM scraping written in Python.
+The script uses the Selenium library to open a Chrome browser and navigate to a LinkedIn profile page.
+It then uses the BeautifulSoup library to extract the HTML of the page and parse it to extract the profile information.
+"""
+
 DRIVER_PATH = "/usr/local/bin/chromedriver"
 
 # extracting credentials from txt file on my pc
@@ -103,17 +109,8 @@ description = description_loc.get_text().strip()
 location_loc = soup.find('div', { 'class': 'pv-text-details__left-panel mt2'})
 location = location_loc.get_text().strip()
  
- 
+# printing the extracted data
 print("Name: ", name,
       "\nDescription: ", description,
       "\nLocation: ", location)
 
-# Getting the HTML of the Experience section in the profile
-#html_list = driver.find_element_by_id("experience-section")
-#experience = soup.find(id="experience")
-#print(html_list)
-
-
-#driver.find_elements()
-# Getting the HTML of the Education section in the profile
-#education = soup.find("section", {"id": "education"}).find('ul')
