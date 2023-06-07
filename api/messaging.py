@@ -38,7 +38,6 @@ def get_conversations_details_by_profile(api, profile_id):
 
     body = result["events"][0]["eventContent"]["com.linkedin.voyager.messaging.event.MessageEvent"]["attributedBody"]["text"]
     date = result["events"][0]["createdAt"]
-    date = datetime.utcfromtimestamp(int(date)/1000)
     sender = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["entityUrn"]
     first_name = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["firstName"] 
     last_name = result["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["lastName"]
@@ -95,15 +94,30 @@ def get_unread_conversations(api):
     :return: The function returns a list of tuples, where each tuple contains
     the conversation URN and profile URN of an unread conversation.
     """
+    # retrieve list of conversations for logged in user
     conversations = api.get_conversations()["elements"]
+
     unread_conversations = []
+
     for i in range(len(conversations)):
         conv = conversations[i]
         # if the number of unread conversations is larger than 0, the conversation is unread
         if(conv["unreadCount"] > 0):
+
             conv_urn = conv["entityUrn"]
-            profile_urn = conv["participants"][0]["entityUrn"]
-            unread_conversations.append(conv_urn, profile_urn)
+
+            # fetch URN ID of other member in conversation from JSON structure
+            profile_urn = util.crop_urn(conv["participants"][0]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["entityUrn"])
+
+            # retrieve URN id of sender of last message
+            sender = util.crop_urn(conv["events"][0]["from"]["com.linkedin.voyager.messaging.MessagingMember"]["miniProfile"]["entityUrn"])
+
+            # check if user is the sender of the last message, then no unread messages in conversation
+            if(profile_urn == sender):
+                # sender of last message is not the logged in user, so there is an unread conversation
+                # append to list
+                unread_conversations.append((util.crop_urn(conv_urn), util.crop_urn(profile_urn)))
+            else: continue
     return unread_conversations
 
 def get_days_since_last_message(api, self_id, profile_id):
@@ -119,17 +133,21 @@ def get_days_since_last_message(api, self_id, profile_id):
     with profile ID `self_id`, then it returns 0.
     """
 
+    # retrieve URN ID of user who is logged into Linkedin
     self_urn = util.get_urn_from_profile_id(api, self_id)
 
+    # retrieve conversation details & URN ID of other profile in the correspondence
     details = get_conversations_details_by_profile(api, profile_id)
     last_message = details["latest_message"]
     sender = util.crop_urn(last_message["sender_urn"])
 
     # if user is the sender, calculate the days since last message sent
-    # else return 0: no action required
+    # else return string: no action required
     if(sender == self_urn):
-        now = datetime.now()
-        date = last_message["date"]
+        now = datetime.date(datetime.now())
+
+        date = datetime.date(datetime.utcfromtimestamp(int((last_message["date"]))/1000))
+        
         days = (now - date).days
         return days
-    else: return 0
+    else: return "not the sender"

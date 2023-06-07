@@ -41,15 +41,25 @@ if(api is not None):
 # list of test profiles to scrape
 profiles = ["annavisman", "ieva-randytė-788956199", "arasaniulis", "kamilė-kaškelytė-7a18381a3"]
 
+profile = profiles[0]
+
 # scrape profile
-res = api.get_profile(profiles[0])
+print("Scraping profile '" + profile + "':")
+res = api.get_profile(profile)
 data = extract.extract_profile_data(res)
 data.print_lead()
 
-# send message to profile
-msg.send_message_to_profile(api, "Hi, this is a testing message", profiles[0])
+# get conversation details for input profile
+(print("Conversation details for profile '" + profile + "':"))
+print(msg.get_conversations_details_by_profile(api, profile))
 
 # get user's unread conversations
-msg.get_unread_conversations(api)
+print("List of unread conversations:")
+print(msg.get_unread_conversations(api))
 
-print(msg.get_days_since_last_message(api, demo_hardcoded_profile_id, profiles[0]))
+# send message to profile
+msg.send_message_to_profile(api, "Hi, this is a testing message", profile)
+
+# get days since last message
+print("Days since last message:")
+print(msg.get_days_since_last_message(api, demo_hardcoded_profile_id, profile))
