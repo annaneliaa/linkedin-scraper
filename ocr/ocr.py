@@ -6,3 +6,5 @@ import pytesseract
 
 # Printing the output of the OCR to the console
 print(pytesseract.image_to_string(Image.open('image1.png')))
+
+print(pytesseract.image_to_string(Image.open('image2.png')))

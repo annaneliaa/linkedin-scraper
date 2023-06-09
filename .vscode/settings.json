@@ -3,5 +3,5 @@
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
     "python.formatting.provider": "none",
-    "docwriter.style": "Auto-detect"
+    "docwriter.style": "NumPy"
 }

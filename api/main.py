@@ -58,7 +58,7 @@ print("List of unread conversations:")
 print(msg.get_unread_conversations(api))
 
 # send message to profile
-msg.send_message_to_profile(api, "Hi, this is a testing message", profile)
+msg.send_message_to_profile(api, "Hi, this is a testing reply", profile)
 
 # get days since last message
 print("Days since last message:")

@@ -82,7 +82,6 @@ def send_message_to_profile(api, message, profile_id):
     profile_urn = util.get_urn_from_profile_id(api, profile_id)
     api.send_message(message, recipients=[profile_urn])
 
-# returns list of tuples: conversation URN and profile URN
 def get_unread_conversations(api):
     """
     This function retrieves a list of unread conversations and returns a list of tuples
@@ -147,7 +146,7 @@ def get_days_since_last_message(api, self_id, profile_id):
         now = datetime.date(datetime.now())
 
         date = datetime.date(datetime.utcfromtimestamp(int((last_message["date"]))/1000))
-        
+
         days = (now - date).days
         return days
     else: return "not the sender"
