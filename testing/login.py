@@ -8,8 +8,10 @@ import time
 
 DRIVER_PATH = "/usr/local/bin/chromedriver"
 
-uname = "ff-admin"
-pwrd = "Ipsec@22"
+with open("creds.txt") as f:
+        uname = f.readline()
+        pwrd = f.readline()
+            
 
 # Configure web driver
 options = Options()
