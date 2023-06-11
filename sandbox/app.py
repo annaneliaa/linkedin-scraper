@@ -5,7 +5,7 @@ from util import *
 from messaging import *
 from extract import *
 
-app = Flask("__name__")
+app = Flask("research")
 
 # get credentials from file
 credentials = get_creds_from_file("pwrd.txt")
@@ -36,6 +36,16 @@ def log_in():
 @app.route('/research/profile')
 def get_profile():
     return "profile"
+
+@app.route('/research/languages')
+def get_languages():
+    try: 
+      api = Linkedin(email, password)
+      res = api.get_profile("arasaniulis")
+      languages = extract_languages(res)
+      return languages
+    except:
+        return Exception("Fetching days since last message failed")
 
 @app.route('/research/send')
 def send_message():
@@ -76,9 +86,10 @@ def days_last_message():
     try: 
       api = Linkedin(email, password)
       days = get_days_since_last_message(api, self_id, "annavisman")
-      return days
+      return str(days)
     except:
         return Exception("Fetching days since last message failed")
     
-if __name__ == '__research__':
-        app.run(debug=True)
+if __name__ == '__main__':
+       # app.run(debug=True)
+      app.run(host="0.0.0.0", port=8000, debug=True)
